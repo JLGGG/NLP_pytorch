@@ -37,3 +37,13 @@ def split_data(x, y, train_ratio=.8):
 
     return x, y
 
+def get_hidden_sizes(input_size, output_size, n_layers):
+    step_size = int((input_size - output_size) / n_layers)
+
+    hidden_sizes = []
+    current_size = input_size
+    for i in range(n_layers - 1):
+        hidden_sizes += [current_size - step_size]
+        current_size = hidden_sizes[-1]
+
+    return hidden_sizes
