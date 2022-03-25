@@ -48,4 +48,24 @@ class Trainer():
         
         return total_loss / len(x)
 
+    def _validate(self, x, y, config):
+        # Turn evaluation mode on.
+        self.model.eval()
+
+        # Turn on the no_grad mode to make more efficiently.
+        with torch.no_grad():
+            x, y = self._batchify(x, y, config.batch_size, random_split=False)
+            total_loss = 0
+
+            for i, (x_i, y_i) in enumerate(zip(x, y)):
+                y_hat_i = self.model(x_i)
+                loss_i = self.crit(y_hat_i, y_i.squeeze())
+
+                if config.verbose >= 2:
+                    print("Valid Iteration(%d/%d): loss=%.4e" % (i+1, len(x), float(loss_i)))
+
+                total_loss += float(loss_i)
+            
+            return total_loss / len(x)
+
     
