@@ -45,4 +45,21 @@ def main(config):
     input_size = int(x[0].shape[-1])
     output_size = int(max(y[0])) + 1
 
-    
+    model = ImageClassifier(
+        input_size=input_size,
+        output_size=output_size,
+        hidden_sizes=get_hidden_sizes(input_size,
+                                    output_size,
+                                    config.n_layers),
+        use_batch_norm=not config.use_dropout,
+        dropout_p=config.dropout_p,
+    ).to(device)
+    optimizer = optim.Adam(model.parameters())
+    crit = nn.NLLLoss()
+
+    if config.verbose >= 1:
+        print(model)
+        print(optimizer)
+        print(crit)
+
+    trainer = Trainer(model, optimizer, crit)
