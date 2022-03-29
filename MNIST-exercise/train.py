@@ -63,3 +63,20 @@ def main(config):
         print(crit)
 
     trainer = Trainer(model, optimizer, crit)
+
+    trainer.train(
+        train_data=(x[0], y[0]),
+        valid_data=(x[1], y[1]),
+        config=config
+    )
+
+    # Save best model weights.
+    torch.save({
+        'model': trainer.model.state_dict(),
+        'opt': optimizer.state_dict(),
+        'config': config,
+    }, config.model_fn)
+
+if __name__ == '__main__':
+    config = define_argparser()
+    main(config)
